@@ -33,7 +33,7 @@ spec:
           values: ["t" ]
         - key: "karpenter.k8s.aws/instance-family"
           operator: In
-          values: ["t2", "t3", "t3a", "t4g"]
+          values: ["t2", "t3a", "t3", "t4g"]
         - key: "karpenter.k8s.aws/instance-memory"
           operator: In
           values: ["1", "2", "4"]
