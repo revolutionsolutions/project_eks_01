@@ -10,6 +10,7 @@ provider "aws" {
   }
 }
 
+provider "local" {}
 
 
 # Local Variables
@@ -24,6 +25,9 @@ locals {
   region_short = lookup(local.region_map, var.region, "unknown")
   cluster_name = "${lower(var.client_name)}${local.region_short}-cluster01"
 
+  renderd_yaml = templatefile("./karpenter.yaml.tpl", {
+    cluster_name = "${lower(var.client_name)}${local.region_short}-cluster01"
+  })
 }
 
 # # Data Sources
@@ -171,4 +175,12 @@ resource "aws_eks_node_group" "eks_ngrp" {
   lifecycle {
     ignore_changes = [scaling_config[0].desired_size]
   }
+}
+
+######################################################################################
+
+# Write Render YAML (inject variables) to a file
+resource "local_file" "karpenter_yaml" {
+  filename = "./karpenter.yaml"
+  content = local.renderd_yaml
 }
