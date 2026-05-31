@@ -1,12 +1,14 @@
-name: Terraform VPC Plan
+name: Terraform EKS Deployment
 
 on:
-  pull_request:
+  push:
     branches: [main]
+    paths:
+      - 'EKS/**'
 
 jobs:
   terraform:
-    name: Terraform Plan
+    name: Terraform Apply
     runs-on: ubuntu-latest
 
     steps:
@@ -29,14 +31,19 @@ jobs:
       # ✅ Terraform Init
       - name: Terraform Init
         run: terraform init
-        working-directory: ./VPC
+        working-directory: ./EKS
 
       # ✅ Terraform Validate
       - name: Terraform Validate
         run: terraform validate
-        working-directory: ./VPC
+        working-directory: ./EKS
 
       # ✅ Terraform Plan
       - name: Terraform Plan
         run: terraform plan
-        working-directory: ./VPC
+        working-directory: ./EKS
+
+      # ✅ Terraform Apply (creates VPC)
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+        working-directory: ./EKS

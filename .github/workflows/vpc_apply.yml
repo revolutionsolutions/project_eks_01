@@ -3,6 +3,8 @@ name: Terraform VPC Deployment
 on:
   push:
     branches: [main]
+    paths:
+      - 'VPC/**'
 
 jobs:
   terraform:

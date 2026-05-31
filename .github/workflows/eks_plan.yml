@@ -1,8 +1,11 @@
-name: Terraform VPC Plan
+name: Terraform EKS Plan
 
 on:
   pull_request:
     branches: [main]
+    paths:
+      - 'EKS/**'
+
 
 jobs:
   terraform:
@@ -29,14 +32,14 @@ jobs:
       # ✅ Terraform Init
       - name: Terraform Init
         run: terraform init
-        working-directory: ./VPC
+        working-directory: ./EKS
 
       # ✅ Terraform Validate
       - name: Terraform Validate
         run: terraform validate
-        working-directory: ./VPC
+        working-directory: ./EKS
 
       # ✅ Terraform Plan
       - name: Terraform Plan
         run: terraform plan
-        working-directory: ./VPC
+        working-directory: ./EKS
