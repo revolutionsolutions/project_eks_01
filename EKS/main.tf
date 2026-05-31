@@ -35,7 +35,7 @@ data "terraform_remote_state" "vpc" {
   backend = "s3"
 
   config = {
-    bucket = "state-bucket-for-projects-202605"
+    bucket = "state-bucket-for-projects-20260531"
     key    = "yyy/vpc/terraform.tfstate"
     region = "us-east-1"
   }
