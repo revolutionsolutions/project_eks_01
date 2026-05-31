@@ -6,11 +6,24 @@ on:
     paths:
       - 'EKS/**'
 
+# also trigger AFTER VPC completes
+  workflow_run:
+    workflows: ["Terraform VPC Plan"]
+    types:
+      - completed
+
 
 jobs:
   terraform:
     name: Terraform Plan
     runs-on: ubuntu-latest
+
+    
+# Smart condition logic
+    if: >
+      (github.event_name == 'pull_request') ||
+      (github.event.workflow_run.conclusion == 'success')
+
 
     steps:
       # ✅ Checkout repo
