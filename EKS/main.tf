@@ -12,7 +12,6 @@ provider "aws" {
 
 provider "local" {}
 
-
 # Local Variables
 locals {
   region_map = {
