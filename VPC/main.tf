@@ -41,36 +41,102 @@ data "aws_availability_zones" "available" {}
 # VPC
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
+  version = "~> 6.0"
 
   name = local.vpc_name
   cidr = "10.0.0.0/16"
-
-  #azs             = ["${var.region}a", "${var.region}b", "${var.region}c"]
-  azs                  = slice(data.aws_availability_zones.available.names, 0, 2)
-  private_subnets      = ["10.0.1.0/24", "10.0.2.0/24"]
-  private_subnet_names = local.private_subnet_names
-  public_subnets       = ["10.0.101.0/24", "10.0.102.0/24"]
-  public_subnet_names  = local.public_subnet_names
-
-  enable_nat_gateway     = false
-  manage_default_route_table = false
-  create_igw = false
-
-  private_subnet_tags = {
-    "kubernetes.io/role/internal-elb" = 1
-    # Tags subnets for Karpenter auto-discovery
-    # "karpenter.sh/discovery" = "${lower(var.client_name)}${local.region_short}-cluster01"
-  }
-
-  public_subnet_tags = {
-    "kubernetes.io/role/elb" = 1
-  }
 
   tags = {
     Terraform   = "true"
     Environment = "${var.client_name}"
   }
 }
+
+resource "aws_subnet" "private_zone1" {
+  vpc_id            = module.vpc.vpc_id
+  cidr_block        = "10.0.1.0/24"
+  availability_zone = data.aws_availability_zones.available.names[0]
+
+  tags = {
+    "Name"                                                 = "${local.private_subnet_names[0]}"
+    "kubernetes.io/role/internal-elb"                      = "1"
+  }
+}
+
+resource "aws_subnet" "private_zone2" {
+  vpc_id            = module.vpc.vpc_id
+  cidr_block        = "10.0.2.0/24"
+  availability_zone = data.aws_availability_zones.available.names[1]
+
+  tags = {
+    "Name"                                                 = "${local.private_subnet_names[1]}"
+    "kubernetes.io/role/internal-elb"                      = "1"
+  }
+}
+
+resource "aws_subnet" "public_zone1" {
+  vpc_id                  = module.vpc.vpc_id
+  cidr_block              = "10.0.101.0/24"
+  availability_zone       = data.aws_availability_zones.available.names[0]
+  map_public_ip_on_launch = true
+
+  tags = {
+    "Name"                                                 = "${local.private_subnet_names[0]}"
+    "kubernetes.io/role/elb"                               = "1"
+  }
+}
+
+resource "aws_subnet" "public_zone2" {
+  vpc_id                  = module.vpc.vpc_id
+  cidr_block              = "10.0.102.0/24"
+  availability_zone       = data.aws_availability_zones.available.names[1]
+  map_public_ip_on_launch = true
+
+  tags = {
+    "Name"                                                 = "${local.private_subnet_names[1]}"
+    "kubernetes.io/role/elb"                               = "1"
+  }
+}
+
+# # VPC
+# module "vpc" {
+#   source = "terraform-aws-modules/vpc/aws"
+#   version = "~> 6.0"
+
+#   name = local.vpc_name
+#   cidr = "10.0.0.0/16"
+
+#   #azs             = ["${var.region}a", "${var.region}b", "${var.region}c"]
+#   azs                  = slice(data.aws_availability_zones.available.names, 0, 2)
+#   private_subnets      = ["10.0.1.0/24", "10.0.2.0/24"]
+#   private_subnet_names = local.private_subnet_names
+#   public_subnets       = ["10.0.101.0/24", "10.0.102.0/24"]
+#   public_subnet_names  = local.public_subnet_names
+
+#   manage_default_route_table = false
+#   default_route_table_routes = []
+
+#   enable_nat_gateway     = false
+#   create_igw = false
+  
+#   create_multiple_public_route_tables  = false
+#   create_multiple_private_route_tables = false
+
+#   private_subnet_tags = {
+#     "kubernetes.io/role/internal-elb" = 1
+#     # Tags subnets for Karpenter auto-discovery
+#     # "karpenter.sh/discovery" = "${lower(var.client_name)}${local.region_short}-cluster01"
+#   }
+
+#   public_subnet_tags = {
+#     "kubernetes.io/role/elb" = 1
+#   }
+
+#   tags = {
+#     Terraform   = "true"
+#     Environment = "${var.client_name}"
+#   }
+# }
 
 # Internet Gateway
 
@@ -95,7 +161,7 @@ resource "aws_eip" "nat" {
 # NAT Gateway
 resource "aws_nat_gateway" "ngw" {
   allocation_id = aws_eip.nat.allocation_id
-  subnet_id     = module.vpc.public_subnets[0]
+  subnet_id     = aws_subnet.public_zone1.id
 
   tags = {
     Name = "${lower(var.client_name)}${local.region_short}-ngw"
