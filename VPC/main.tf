@@ -161,7 +161,7 @@ resource "aws_eip" "nat" {
 # NAT Gateway
 resource "aws_nat_gateway" "ngw" {
   allocation_id = aws_eip.nat.allocation_id
-  subnet_id     = module.vpc.public_subnets[0]
+  subnet_id     = aws_subnet.public_zone1.id
 
   tags = {
     Name = "${lower(var.client_name)}${local.region_short}-ngw"
