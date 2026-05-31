@@ -41,6 +41,17 @@ data "terraform_remote_state" "vpc" {
   }
 }
 
+data "aws_subnets" "private" {
+  filter {
+    name   = "vpc-id"
+    values = [data.terraform_remote_state.vpc.outputs.vpc_id]
+  }
+
+  tags = {
+    "kubernetes.io/role/internal-elb" = "1"
+  }
+}
+
 ######################################################################################
 # EKS Cluster IAM Role
 resource "aws_iam_role" "eks_cluster_role" {
@@ -102,7 +113,7 @@ module "eks" {
 
 
   vpc_id     = data.terraform_remote_state.vpc.outputs.vpc_id
-  subnet_ids = data.terraform_remote_state.vpc.outputs.private_subnets
+  subnet_ids = data.aws_subnets.private.ids
 
   tags = {
     Name      = "${local.cluster_name}"
