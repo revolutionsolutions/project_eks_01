@@ -185,7 +185,7 @@ resource "aws_route_table" "private_rt" {
 }
 
 # Private route table association
-resource "aws_route_table_association" "priv_ass" {
+/* resource "aws_route_table_association" "priv_ass" {
   for_each = {
     for i, subnet_id in module.vpc.private_subnets :
     i => subnet_id
@@ -193,7 +193,7 @@ resource "aws_route_table_association" "priv_ass" {
 
   subnet_id      = each.value
   route_table_id = aws_route_table.private_rt.id
-}
+} */
 
 # Routing table for public subnet
 resource "aws_route_table" "public_rt" {
@@ -210,12 +210,32 @@ resource "aws_route_table" "public_rt" {
 }
 
 # Public route table association
-resource "aws_route_table_association" "pub_ass" {
+/* resource "aws_route_table_association" "pub_ass" {
   for_each = {
     for i, subnet_id in module.vpc.public_subnets :
     i => subnet_id
   }
 
   subnet_id      = each.value
+  route_table_id = aws_route_table.public_rt.id
+} */
+
+resource "aws_route_table_association" "private_zone1" {
+  subnet_id      = aws_subnet.private_zone1.id
+  route_table_id = aws_route_table.private_rt.id
+}
+
+resource "aws_route_table_association" "private_zone2" {
+  subnet_id      = aws_subnet.private_zone2.id
+  route_table_id = aws_route_table.private_rt.id
+}
+
+resource "aws_route_table_association" "public_zone1" {
+  subnet_id      = aws_subnet.public_zone1.id
+  route_table_id = aws_route_table.public_rt.id
+}
+
+resource "aws_route_table_association" "public_zone2" {
+  subnet_id      = aws_subnet.public_zone2.id
   route_table_id = aws_route_table.public_rt.id
 }
