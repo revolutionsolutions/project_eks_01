@@ -29,15 +29,19 @@ jobs:
       # ✅ Terraform Init
       - name: Terraform Init
         run: terraform init
+        working-directory: ./VPC
 
       # ✅ Terraform Validate
       - name: Terraform Validate
         run: terraform validate
+        working-directory: ./VPC
 
       # ✅ Terraform Plan
       - name: Terraform Plan
         run: terraform plan
+        working-directory: ./VPC
 
       # ✅ Terraform Apply (creates VPC)
       - name: Terraform Apply
         run: terraform apply -auto-approve
+        working-directory: ./VPC
