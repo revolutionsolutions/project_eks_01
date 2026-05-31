@@ -151,7 +151,7 @@ resource "aws_iam_role_policy_attachment" "amazon_eks_worker_node_policy" {
 
 resource "aws_iam_role_policy_attachment" "amazon_ec2_container_registry_read_only" {
   role       = aws_iam_role.eks_ngrp_iam_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPullOnly"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
 resource "aws_iam_role_policy_attachment" "amazon_eks_cni_policy" {
