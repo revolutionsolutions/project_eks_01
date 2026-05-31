@@ -15,6 +15,6 @@ terraform {
 
 # S3 bucket
 resource "aws_s3_bucket" "state" {
-  bucket = "state-bucket-for-projects-202605"
+  bucket = "state-bucket-for-projects-20260531"
   force_destroy = true
 }
