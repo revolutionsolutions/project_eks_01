@@ -52,9 +52,9 @@ module "vpc" {
   public_subnets       = ["10.0.101.0/24", "10.0.102.0/24"]
   public_subnet_names  = local.public_subnet_names
 
-  enable_nat_gateway     = true
-  single_nat_gateway     = true
-  one_nat_gateway_per_az = false
+  enable_nat_gateway     = false
+  manage_default_route_table = false
+  create_igw = false
 
   private_subnet_tags = {
     "kubernetes.io/role/internal-elb" = 1
