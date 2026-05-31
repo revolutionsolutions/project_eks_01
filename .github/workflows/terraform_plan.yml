@@ -1,4 +1,4 @@
-name: Terraform VPC Deployment
+name: Terraform VPC Plan
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   terraform:
-    name: Terraform Apply
+    name: Terraform Plan
     runs-on: ubuntu-latest
 
     steps:
@@ -39,9 +39,4 @@ jobs:
       # ✅ Terraform Plan
       - name: Terraform Plan
         run: terraform plan
-        working-directory: ./VPC
-
-      # ✅ Terraform Apply (creates VPC)
-      - name: Terraform Apply
-        run: terraform apply -auto-approve
         working-directory: ./VPC
