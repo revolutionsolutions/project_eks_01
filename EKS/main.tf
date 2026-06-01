@@ -215,3 +215,8 @@ resource "aws_eks_addon" "metrics_server" {
   cluster_name  = module.eks.cluster_name
   addon_name    = "metrics-server"
 }
+
+resource "aws_eks_addon" "vpc_cni" {
+  cluster_name  = module.eks.cluster_name
+  addon_name    = "vpc-cni"
+}
