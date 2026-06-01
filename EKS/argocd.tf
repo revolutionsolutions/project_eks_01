@@ -31,5 +31,5 @@ resource "helm_release" "argocd" {
     })
   ]
 
-  depends_on = [ kubernetes_namespace.argocd ]
+  depends_on = [ kubernetes_namespace_v1.argocd]
 }
