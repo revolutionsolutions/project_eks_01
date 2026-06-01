@@ -25,9 +25,9 @@ locals {
   region_short = lookup(local.region_map, var.region, "unknown")
   cluster_name = "${lower(var.client_name)}${local.region_short}-cluster01"
 
-  renderd_yaml = templatefile("./karpenter.yaml.tpl", {
-    cluster_name = "${lower(var.client_name)}${local.region_short}-cluster01"
-  })
+  # renderd_yaml = templatefile("./karpenter.yaml.tpl", {
+  #   cluster_name = "${lower(var.client_name)}${local.region_short}-cluster01"
+  # })
 }
 
 # # Data Sources
@@ -35,7 +35,7 @@ data "terraform_remote_state" "vpc" {
   backend = "s3"
 
   config = {
-    bucket = "state-bucket-for-projects-20260531"
+    bucket = "state-bucket-for-projects-20260601"
     key    = "yyy/vpc/terraform.tfstate"
     region = "us-east-1"
   }
@@ -190,8 +190,9 @@ resource "aws_eks_node_group" "eks_ngrp" {
 
 ######################################################################################
 
-# Write Render YAML (inject variables) to a file
-resource "local_file" "karpenter_yaml" {
-  filename = "./karpenter.yaml"
-  content = local.renderd_yaml
-}
+# # Write Render YAML (inject variables) to a file
+# resource "local_file" "karpenter_yaml" {
+#   filename = "./karpenter.yaml"
+#   content = local.renderd_yaml
+# }
+######################################################################################
