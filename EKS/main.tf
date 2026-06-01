@@ -25,9 +25,9 @@ locals {
   region_short = lookup(local.region_map, var.region, "unknown")
   cluster_name = "${lower(var.client_name)}${local.region_short}-cluster01"
 
-  renderd_yaml = templatefile("./karpenter.yaml.tpl", {
-    cluster_name = "${lower(var.client_name)}${local.region_short}-cluster01"
-  })
+  # renderd_yaml = templatefile("./karpenter.yaml.tpl", {
+  #   cluster_name = "${lower(var.client_name)}${local.region_short}-cluster01"
+  # })
 }
 
 # # Data Sources
