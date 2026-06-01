@@ -2,6 +2,8 @@ resource "kubernetes_namespace" "argocd" {
   metadata {
     name = "argocd"
   }
+
+  depends_on = [ aws_eks_node_group.eks_ngrp ]
 }
 
 resource "helm_release" "argocd" {
@@ -28,4 +30,6 @@ resource "helm_release" "argocd" {
       }
     })
   ]
+
+  depends_on = [ kubernetes_namespace.argocd ]
 }
