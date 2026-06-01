@@ -99,17 +99,17 @@ module "eks" {
   authentication_mode = "API"
 
   # Addons
-  addons = {
-    coredns = {}
-    eks-pod-identity-agent = {
-      before_compute = true
-    }
-    kube-proxy = {}
-    vpc-cni = {
-      before_compute = true
-    }
-    metrics-server = {}
-  }
+  # addons = {
+  #   coredns = {}
+  #   eks-pod-identity-agent = {
+  #     before_compute = true
+  #   }
+  #   kube-proxy = {}
+  #   vpc-cni = {
+  #     before_compute = true
+  #   }
+  #   metrics-server = {}
+  # }
 
 
   vpc_id     = data.terraform_remote_state.vpc.outputs.vpc_id
@@ -196,3 +196,22 @@ resource "aws_eks_node_group" "eks_ngrp" {
 #   content = local.renderd_yaml
 # }
 ######################################################################################
+resource "aws_eks_addon" "pod_identity" {
+  cluster_name  = module.eks.cluster_name
+  addon_name    = "eks-pod-identity-agent"
+}
+
+resource "aws_eks_addon" "cordns" {
+  cluster_name  = module.eks.cluster_name
+  addon_name    = "coredns"
+}
+
+resource "aws_eks_addon" "kube_proxy" {
+  cluster_name  = module.eks.cluster_name
+  addon_name    = "kube-proxy"
+}
+
+resource "aws_eks_addon" "metrics_server" {
+  cluster_name  = module.eks.cluster_name
+  addon_name    = "metrics-server"
+}

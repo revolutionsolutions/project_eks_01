@@ -81,7 +81,7 @@ resource "aws_subnet" "public_zone1" {
   map_public_ip_on_launch = true
 
   tags = {
-    "Name"                                                 = "${local.private_subnet_names[0]}"
+    "Name"                                                 = "${local.public_subnet_names[0]}"
     "kubernetes.io/role/elb"                               = "1"
   }
 }
@@ -93,7 +93,7 @@ resource "aws_subnet" "public_zone2" {
   map_public_ip_on_launch = true
 
   tags = {
-    "Name"                                                 = "${local.private_subnet_names[1]}"
+    "Name"                                                 = "${local.public_subnet_names[1]}"
     "kubernetes.io/role/elb"                               = "1"
   }
 }
