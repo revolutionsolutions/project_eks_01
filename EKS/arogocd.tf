@@ -10,5 +10,5 @@ resource "helm_release" "argocd" {
 
   values = [file("values/argocd.yaml")]
 
- # depends_on = [aws_eks_node_group.eks_ngrp]
+ depends_on = [aws_eks_node_group.eks_ngrp]
 }
