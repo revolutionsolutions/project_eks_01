@@ -204,6 +204,7 @@ resource "aws_eks_addon" "pod_identity" {
 resource "aws_eks_addon" "cordns" {
   cluster_name  = module.eks.cluster_name
   addon_name    = "coredns"
+  depends_on = [ aws_eks_node_group.eks_ngrp ]
 }
 
 resource "aws_eks_addon" "kube_proxy" {
@@ -214,6 +215,7 @@ resource "aws_eks_addon" "kube_proxy" {
 resource "aws_eks_addon" "metrics_server" {
   cluster_name  = module.eks.cluster_name
   addon_name    = "metrics-server"
+  depends_on = [ aws_eks_node_group.eks_ngrp ]
 }
 
 resource "aws_eks_addon" "vpc_cni" {
