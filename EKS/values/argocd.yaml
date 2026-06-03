@@ -2,3 +2,10 @@
 configs:
   params:
     server.insecure: true
+---
+server:
+  extraArgs:
+    - --insecure   # ✅ IMPORTANT → ALB terminates TLS
+
+  service:
+    type: ClusterIP   # ✅ VERY IMPORTANT
