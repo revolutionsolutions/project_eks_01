@@ -12,3 +12,44 @@ resource "helm_release" "argocd" {
 
  depends_on = [aws_eks_node_group.eks_ngrp]
 }
+
+#Install ingress for argocd service
+resource "kubernetes_ingress_v1" "argocd" {
+  metadata {
+    name      = "argocd"
+    namespace = "argocd"
+
+    annotations = {
+      "kubernetes.io/ingress.class"         = "alb"
+      "alb.ingress.kubernetes.io/scheme"    = "internet-facing"
+      "alb.ingress.kubernetes.io/target-type" = "ip"
+      "alb.ingress.kubernetes.io/backend-protocol" = "HTTP"
+      "alb.ingress.kubernetes.io/listen-ports" = "[{\"HTTP\":80}]"
+    }
+  }
+
+  spec {
+    ingress_class_name = "alb"
+
+    rule {
+      http {
+        path {
+          path      = "/"
+          path_type = "Prefix"
+
+          backend {
+            service {
+              name = "argocd-server"
+
+              port {
+                number = 80
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  wait_for_load_balancer = true
+}
