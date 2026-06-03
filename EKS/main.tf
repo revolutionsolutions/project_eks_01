@@ -190,11 +190,11 @@ resource "aws_eks_node_group" "eks_ngrp" {
 
 ######################################################################################
 
-# # Write Render YAML (inject variables) to a file
-# resource "local_file" "karpenter_yaml" {
-#   filename = "./karpenter.yaml"
-#   content = local.renderd_yaml
-# }
+# Write Render YAML (inject variables) to a file
+resource "local_file" "karpenter_yaml" {
+  filename = "./karpenter.yaml"
+  content = local.renderd_yaml
+}
 ######################################################################################
 resource "aws_eks_addon" "pod_identity" {
   cluster_name  = module.eks.cluster_name
