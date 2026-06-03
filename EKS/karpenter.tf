@@ -26,6 +26,7 @@ module "karpenter" {
   cluster_name = module.eks.cluster_name
 
   create_pod_identity_association = true
+  enable_inline_policy = true
 
   # Attach additional IAM policies to the Karpenter node IAM role
   node_iam_role_additional_policies = {
@@ -47,6 +48,7 @@ resource "helm_release" "karpenter" {
   chart               = "karpenter"
   version             = "1.12.1"
   wait                = false
+
 
   values = [
     <<-EOT
