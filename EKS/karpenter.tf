@@ -1,16 +1,16 @@
 ######################################################################################
 # Provides
-provider "helm" {
-  kubernetes = {
-    host                   = module.eks.cluster_endpoint
-    cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
-    exec = {
-      api_version = "client.authentication.k8s.io/v1beta1"
-      args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
-      command     = "aws"
-    }
-  }
-}
+# provider "helm" {
+#   kubernetes = {
+#     host                   = module.eks.cluster_endpoint
+#     cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+#     exec = {
+#       api_version = "client.authentication.k8s.io/v1beta1"
+#       args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
+#       command     = "aws"
+#     }
+#   }
+# }
 ######################################################################################
 # Data Source
 data "aws_ecrpublic_authorization_token" "token" {
@@ -45,13 +45,11 @@ resource "helm_release" "karpenter" {
   repository_username = data.aws_ecrpublic_authorization_token.token.user_name
   repository_password = data.aws_ecrpublic_authorization_token.token.password
   chart               = "karpenter"
-  version             = "1.6.0"
+  version             = "1.12.1"
   wait                = false
 
   values = [
     <<-EOT
-    nodeSelector:
-      karpenter.sh/controller: 'true'
     dnsPolicy: Default
     settings:
       clusterName: ${module.eks.cluster_name}
@@ -62,4 +60,6 @@ resource "helm_release" "karpenter" {
       enabled: false
     EOT
   ]
+
+  depends_on = [aws_eks_node_group.eks_ngrp]
 }
